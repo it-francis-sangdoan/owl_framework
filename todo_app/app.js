@@ -1,4 +1,4 @@
-const { Component, mount, xml } = owl;
+const { Component, mount, xml, useState } = owl;
 
 class Root extends Component {
     static template = xml `
@@ -10,11 +10,12 @@ class Root extends Component {
             </div>
         </div>
         <ul class="d-flex flex-column mt-5 p-0">
-            <li class="d-flex align-items-center justify-content-between border p-3 mb-2 rounded">
+            <t t-foreach="tasks" t-as="task" t-key="task.id">
+                <li t-attf-style="background-color: #{task.color}" class="d-flex align-items-center justify-content-between border p-3 mb-2 rounded">
                 <div class="form-check form-switch fs-5">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                    <label class="form-check-label" for="flexCheckDefault">
-                    Default checkbox
+                    <input class="form-check-input" type="checkbox" value="" t-att-id="task.id"/>
+                    <label class="form-check-label" t-att-for="task.id">
+                        <t t-esc="task.name" />
                     </label>
                 </div>
                 <div>
@@ -22,8 +23,31 @@ class Root extends Component {
                     <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
                 </div>
             </li>
+            </t>
         </ul>
     `
+
+    setup() {
+        this.tasks = useState([{
+                id: 1,
+                name: "Task1",
+                color: "#fff000",
+                isCompledted: false
+            },
+            {
+                id: 2,
+                name: "Task2",
+                color: "#f0f0f0",
+                isCompledted: false
+            },
+            {
+                id: 3,
+                name: "Task3",
+                color: "#ff0000",
+                isCompledted: false
+            }
+        ])
+    }
 }
 
 mount(Root, document.getElementById("root"))
