@@ -4,9 +4,11 @@ class Root extends Component {
     static template = xml `
         <div>
             <div class="input-group-lg w-100 d-flex border rounded align-items-center">
-                <input type="text" class="form-control-lg flex-fill border-0 me-1" placeholder="Add your new task" aria-label="Add your new task" aria-describedby="button-addon2"/>
-                <input type="color" class="form-control-lg form-control-color border-0 bg-white m-0" id="color" value="#563d7c" title="Choose your color"/>
-                <button class="btn btn-primary" type="button" id="button-addon2"><i class="bi bi-plus fs-3"></i></button>
+                <input type="text" class="form-control-lg flex-fill border-0 me-1" placeholder="Add your new task" aria-label="Add your new task" aria-describedby="button-addon2"
+                t-att-value="state.name" t-model="state.name" />
+                <input type="color" class="form-control-lg form-control-color border-0 bg-white m-0" id="color" t-att-value="state.color" title="Choose your color"
+                t-model="state.color"/>
+                <button class="btn btn-primary" type="button" id="button-addon2" t-on-click="addTask"><i class="bi bi-plus fs-3"></i></button>
             </div>
         </div>
         <ul class="d-flex flex-column mt-5 p-0">
@@ -28,25 +30,32 @@ class Root extends Component {
     `
 
     setup() {
-        this.tasks = useState([{
-                id: 1,
-                name: "Task1",
-                color: "#fff000",
-                isCompledted: false
-            },
-            {
-                id: 2,
-                name: "Task2",
-                color: "#f0f0f0",
-                isCompledted: false
-            },
-            {
-                id: 3,
-                name: "Task3",
-                color: "#ff0000",
-                isCompledted: false
-            }
-        ])
+        this.state = useState({
+            name: "",
+            color: "#FFF000",
+            isCompledted: false,
+        })
+
+        this.tasks = useState([])
+    }
+
+    addTask() {
+        if (!this.state.name) {
+            alert("Please provide name of task.")
+            return
+        }
+
+        const id = Math.random().toString().substring(2, 12)
+        this.tasks.push({
+            id: id,
+            name: this.state.name,
+            color: this.state.color,
+            isCompledted: false,
+        })
+
+        let state = this.state
+        this.state = {...state, name: "", color: "#FFF000" }
+
     }
 }
 
